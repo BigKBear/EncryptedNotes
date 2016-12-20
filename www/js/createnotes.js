@@ -21,6 +21,11 @@ var app={
 	bindEvents:function(){
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 		document.addEventListener('DOMContentLoaded', this.onDeviceReady);    
+		if ('addEventListener' in document) {
+		    document.addEventListener('DOMContentLoaded', function() {
+		        FastClick.attach(document.body);
+		    }, false);
+		}
 		document.getElementById("saveBtn").addEventListener("click", function(){  //write for update too
 
 			app.checkForPassword();
@@ -34,12 +39,16 @@ var app={
 		document.getElementById("backBtn").addEventListener("click", function(){
 			app.back();
 		});
+		document.getElementById("deleteBtn").addEventListener("click",function(){
+			app.checkForPasswordDelete();
+			window.location='index.html';
+		});
 	},
 	//deviceready Event Handler
 	//Scope of 'this' is the event. In order to call the 'receivedEvent'
 	//function, we must explictly call 'app.receivedEvent(...);
 	onDeviceReady:function(){
-		console.log("Createnotes of topics page triggered");
+		console.log("Details of topics page triggered");
 		app.initDB();
 		app.checkForFlow();
 	},
@@ -54,16 +63,20 @@ var app={
 		if(idx.indexOf("?msg=view") != -1){
 			$("#updateBtn").show();
 			$("#saveBtn").hide();
+			$("#deleteBtn").show();
 		    var rowid = idx.split("msg=view")[1];
+		    rowid = decodeURI(rowid);
 		    db.transaction(function(tx) {
             //tx.executeSql('DELETE FROM topics');
-            	var sql = 'SELECT * FROM topics where rowid='+(parseInt(rowid) + 1);
+            	var sql = 'SELECT * FROM topics where topic="'+rowid+'"';
+            	//console.log(sql);
             	tx.executeSql(sql, [], app.fecthSuccess, app.fetchError);
         	});
 		}
 		else{
 			$("#updateBtn").hide();//
 			$("#saveBtn").show();
+			$("#deleteBtn").hide();
 		}
 		
 	},
@@ -88,7 +101,8 @@ var app={
 	createDB: function(){
 		localStorage.setItem('dbCreated-USERS',true);
 		db.transaction(function (tx) {
-			 tx.executeSql('CREATE TABLE IF NOT EXISTS topics (topic unique, desc)')
+			
+			 tx.executeSql('CREATE TABLE IF NOT EXISTS topics (topic unique, desc) WITHOUT ROWID;')
 		});
 	},
 
@@ -106,6 +120,16 @@ var app={
 		}	
 		else {
 			app.createNewPasswordForInsert();
+		}
+	},
+	
+	checkForPasswordDelete:function(){
+		var password = localStorage.getItem('appPsss21');
+		var idx = document.URL;
+		if(password != null){
+			if(idx.indexOf("?msg=view") != -1){
+				app.deleteValue();
+			}
 		}
 	},
 	/**
@@ -140,7 +164,7 @@ var app={
         var topicname = document.getElementById("topicname").value;
 		var desc = document.getElementById("topicdesc").value;
 		//encrpt here and store in var
-		debugger;
+		
 		if(topicname.length == 0 && desc.length == 0){
 			Materialize.toast('Empty fields', 4000)
 			return;
@@ -149,15 +173,16 @@ var app={
 		if(topicname!=null && desc!=null){
 		 desc = CryptoJS.AES.encrypt(desc,SECRET_PHRASE);	
          db.transaction(function (tx) {
-            tx.executeSql('INSERT INTO topics (topic, desc) VALUES (?, ?)', [topicname,desc]);
+			 
+            tx.executeSql('INSERT INTO topics (topic, desc) VALUES (?, ?)', [topicname,desc],onInsertSuccess,onInsertError);
         });
 		}
     },
 	updateValue:function(){
         var topicname = document.getElementById("topicname").value;
 		var desc = document.getElementById("topicdesc").value;
-		var idx = document.URL;
-		var rowid = idx.split("msg=view")[1];
+		//var idx = document.URL;
+		//var rowid = idx.split("msg=view")[1];
 		//alert("It is desc check"+desc);
 		//encrpt here and store in var
 		if(topicname.length == 0 && desc.length == 0){return;}
@@ -167,7 +192,8 @@ var app={
 		 desc = CryptoJS.AES.encrypt(desc,SECRET_PHRASE);	
          db.transaction(function (tx) {
 			 
-			 tx.executeSql('Update topics set desc=? WHERE rowid=?', [desc, (parseInt(rowid))+1]);
+			 //tx.executeSql('Update topics set desc=? WHERE rowid=?', [desc, (parseInt(rowid))+1],onInsertSuccess,onInsertError);
+			 tx.executeSql('Update topics set desc=? WHERE topic=?', [desc, topicname],onInsertSuccess,onInsertError);
 			 //desc = CryptoJS.AES.encrypt(desc,SECRET_PHRASE);
 			 //alert('updated after decrypt desc'+desc);
 			 
@@ -185,10 +211,47 @@ var app={
 		if(topicname!=null && desc!=null){
 			desc = CryptoJS.AES.decrypt(desc,SECRET_PHRASE);
 			db.transaction(function (tx) {
-				tx.executeSql('INSERT INTO topics (topic, desc) VALUES (?, ?)', [topicname,desc]);
+				//debugger;
+				tx.executeSql('INSERT INTO topics (topic, desc) VALUES (?, ?)', [topicname,desc],app.onInsertSuccess,app.onInsertError);
 			});
 		}
 	},
+	
+	deleteValue:function(){
+		var topicname = document.getElementById("topicname").value;
+		var desc = document.getElementById("topicdesc").value;
+		var idx = document.URL;
+		var rowid = idx.split("msg=view")[1];
+		if(topicname.length == 0 && desc.length == 0){return;}
+		
+		if(topicname!=null && desc!=null){
+			db.transaction(function (tx) {
+				//The below line clears the current table in the database with out deleting the table it self
+				//tx.executeSql("DELETE FROM topics",app.onInsertSuccess,app.onInsertError);
+				tx.executeSql("DELETE FROM topics WHERE topic=?",[topicname],onInsertSuccess,onInsertError);
+			});
+		}
+	},
+	/*
+	deleteValue:function(){
+
+  var topicname = document.getElementById("topicname").value;
+  var desc = document.getElementById("topicdesc").value;
+  var idx = document.URL;
+  var i = 0;
+  alert(idx);
+  var rowid = idx.split("msg=view")[i+1];
+  //alert(rowid);
+  if(topicname.length == 0 && desc.length == 0){return;}
+  
+  if(topicname!=null && desc!=null){
+   db.transaction(function (tx) {
+    tx.executeSql("DELETE FROM topics WHERE rowid=?",[rowid],onInsertSuccess,onInsertError);
+    //The below line clears the current table in the database with out deleting the table it self
+    //tx.executeSql("DELETE FROM topics",app.onInsertSuccess,app.onInsertError);
+   });
+  }
+ },*/
 	
 	back:function(){
 		window.location='index.html';
@@ -214,7 +277,16 @@ var app={
 		//alert('clicked element --------   '+ele);
 	},
 	errorCB:function(e){
-	  alert('error');
+	  alert('error creating table');
     }
 };
 app.initialize();
+function onInsertSuccess(){
+		//debugger;
+		alert('success');
+}
+
+function onInsertError(e){
+		//debugger;
+		alert("This title already exists!" + "\n" +"Please select a unique title name");
+	}

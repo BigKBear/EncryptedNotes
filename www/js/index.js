@@ -19,6 +19,7 @@ var app = {
             pwc = parseInt(count);
         }
     },
+
     /**
      * this method checks the user has password saved in the local or not.   
      * If so, it proceeds,else it prompts alert to enter password and saves in local
@@ -32,7 +33,7 @@ var app = {
     },
     /** 
      * method to create new password
-     */ 
+     */
     createNewPassword: function() {
         swal({
             title: "Please enter your password before saving your details !!",
@@ -56,9 +57,16 @@ var app = {
             swal.close();
         });
     },
+
+
     bindEvents: function() {
-        document.addEventListener('deviceready', onDeviceReady, false);
-        document.addEventListener('DOMContentLoaded', onDeviceReady);
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+        document.addEventListener('DOMContentLoaded', this.onDeviceReady);
+        if ('addEventListener' in document) {
+            document.addEventListener('DOMContentLoaded', function() {
+                FastClick.attach(document.body);
+            }, false);
+        }
         $("#search").keyup(function() { // If nothing needed for this function ".keyup(null)"
             // Retrieve the input field text and reset the count to zero
             var filter = $(this).val(),
@@ -98,6 +106,32 @@ var app = {
             swal.close();
         });
     },
+    onDeviceReady: function() {
+        $('#clickMe').click(function() {
+            app.showPopup();
+        });
+        $("#fab-clicked").click(function() { //write for update too
+
+            //alert("clicked");
+            window.location = 'createnotes.html';
+        });
+        app.initDB();
+        document.addEventListener("backbutton", app.onBackKeyDown, true);
+		/*document.addEventListener("backbutton", function(e){
+			if($.mobile.activePage.is('index.html')){
+				e.preventDefault();
+				navigator.app.exitApp();
+			}
+			else{
+				navigator.app.backHistory()
+			}
+		},false);*/
+    },
+    onBackKeyDown: function(e) {
+        //do nothing, it will stand in same place.
+		//alert("Application is closing");
+		navigator.app.exitApp();
+    },
     initDB: function() {
         db = openDatabase('test', '1.0', 'Test DB', 2 * 1024 * 1024);
         if (!localStorage.getItem('dbCreated-USERS')) {
@@ -109,13 +143,14 @@ var app = {
     createDB: function() {
         localStorage.setItem('dbCreated-USERS', true);
         db.transaction(function(tx) {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS topics (topic unique, desc)')
+            tx.executeSql('CREATE TABLE IF NOT EXISTS topics (topic unique, desc)');
 
         });
     },
     fetchedValuesList: function() {
         db.transaction(function(tx) {
             //tx.executeSql('DELETE FROM topics');
+			tx.executeSql('CREATE TABLE IF NOT EXISTS topics (topic unique, desc)');//user manually delete the table table recreate auto
             tx.executeSql('SELECT * FROM topics', [], app.successCB, app.errorCB);
         });
     },
@@ -134,12 +169,13 @@ var app = {
             }
         }
         $('ul').children('li').on('click', function() {
-			selectedIndex = $(this).index();
+            selectedIndex = $(this).index();
+            var selectedKey = $(this).text();
             var type = "password";
-            if(pwc >3){
+            if (pwc > 3) {
                 type = "text";
             }
-			
+
             swal({
                 title: "Enter Encryption Password to Decrypt",
                 text: "",
@@ -164,27 +200,27 @@ var app = {
                     //selectedIndex = $(this).index();
                     localStorage.setItem('incorrectpwd', 0);
                     //alert('Selected Index =' + selectedIndex + "\n");
-                    window.location.href = "createnotes.html?msg=view" + selectedIndex;
+                    window.location.href = "createnotes.html?msg=view" + selectedKey;
                     swal.close();
                 } else {
                     pwc++;
                     localStorage.setItem('incorrectpwd', pwc);
                     if (pwc < 6) {
-						//alert("You have entered an Incorrect password!")
-                        alert("You have entered an Incorrect password!" +"\n"+ "Please try again"+"\n"+"Attempt Number - "+pwc);
+                        //alert("You have entered an Incorrect password!")
+                        alert("You have entered an Incorrect password!" + "\n" + "Please try again" + "\n" + "Attempt Number - " + pwc);
                     }
-					if(pwc == 6){
-						alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
-					}
+                    if (pwc == 6) {
+                        alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
+                    }
                     if (pwc > 6) {
                         debugger;
                         //alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
                         db.transaction(function(tx) {
                             tx.executeSql('DELETE FROM topics');
-							});
-							localStorage.setItem('incorrectpwd', 0);
-                            location.reload();
-							type = "password";
+                        });
+                        localStorage.setItem('incorrectpwd', 0);
+                        location.reload();
+                        type = "password";
                     }
                     swal.close();
                 }
@@ -193,28 +229,8 @@ var app = {
     },
 
     errorCB: function(e) {
-        alert('error');
+        alert('error creating table');
     }
 };
-
-function onBackKeyDown() {
-    // Handle the back button
-    alert('No Free Space!');
-    window.location='index.html';
-    }
-
-
-function onDeviceReady() {
-        document.addEventListener("backbutton", onBackKeyDown, false);
-        $('#clickMe').click(function() {
-            app.showPopup();
-        });
-        $("#fab-clicked").click(function() {  //write for update too
-
-            //alert("clicked");
-            window.location='createnotes.html';
-        });
-        app.initDB();
-    }
 
 app.initialize();
