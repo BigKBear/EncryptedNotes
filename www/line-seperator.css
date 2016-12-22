@@ -1,0 +1,23 @@
+
+
+body{
+	background-color:lightgrey;
+
+	height:1px;
+
+	background:#717171;
+
+	}
+
+	li{
+		border-bottom:1px solid #313030;
+		padding:10px 
+	}
+	h1{
+		
+	}
+	
+	ul{
+		list-style:none
+	}
+	
