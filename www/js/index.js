@@ -110,22 +110,12 @@ var app = {
         $('#clickMe').click(function() {
             app.showPopup();
         });
-        $("#fab-clicked").click(function() { //write for update too
-
-            //alert("clicked");
+        $("#fab-clicked").click(function() { 
+            //write for update too
             window.location = 'createnotes.html';
         });
         app.initDB();
         document.addEventListener("backbutton", app.onBackKeyDown, true);
-		/*document.addEventListener("backbutton", function(e){
-			if($.mobile.activePage.is('index.html')){
-				e.preventDefault();
-				navigator.app.exitApp();
-			}
-			else{
-				navigator.app.backHistory()
-			}
-		},false);*/
     },
     onBackKeyDown: function(e) {
         //do nothing, it will stand in same place.
