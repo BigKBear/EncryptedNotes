@@ -135,7 +135,7 @@ var app={
 			app.createNewPasswordForInsert();
 		}
 	},
-
+		
 	checkForPasswordDelete:function(){
 		var password = localStorage.getItem('appPsss21');
 		var idx = document.URL;
@@ -178,8 +178,7 @@ var app={
      	var desc = document.getElementById("topicdesc").value;
 		//encrpt here and store in var		
 		if(topicname.length == 0 && desc.length == 0){
-			//Materialize.toast('Empty fields', 4000);
-			$('.emptyfields').stop().fadeIn(400).delay(3000).fadeOut(400);
+			Materialize.toast('Empty fields', 4000);
 			return false;
 		}else if(topicname!=null && desc!=null){
 			//check that topic does not already exist
@@ -191,7 +190,7 @@ var app={
     		tx.executeSql('SELECT * from topics WHERE topic=?',[topicnametobechecked],function(tx,results){
     			var len = results.rows.length, i;
     			if(len>0){
-    				$('.topicalreadyexist').stop().fadeIn(400).delay(3000).fadeOut(400);
+    				Materialize.toast('Topic exist already', 4000);
 					return false;
     			}else{
 					desctobeadded = CryptoJS.AES.encrypt(desctobeadded,SECRET_PHRASE);
