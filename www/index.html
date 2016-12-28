@@ -4,27 +4,28 @@
 <head>
     <!--Import Google Icon Font-->
     <link rel="stylesheet" href="css/sweetalert.css">
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/material_icons.css">
+	<link type="text/cs" rel="stylesheet" href="css/index.css" >
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-
+	
 <body>
     <div class="navbar-fixed">
-        <nav class = "blue">
-            <div class="nav-wrapper">
-                <a href="" class="brand-logo-center"><img src="images/icon.png" width="36" height="36" draggable="false" align="middle">Encrypted Notes</a>
+        <nav>
+            <div style="background-color:white" class="nav-wrapper">
+                <a href="" style="color:black" class="brand-logo-center" ><img src="images/icon.png" width="36" height="36" draggable="false" align="center"><b><font size="4">ENCRYPTED NOTES</font></i></b></a>
             </div>
         </nav>
     </div>
-    <nav class = "blue">
+    <nav class = "grey">
         <div class="nav-wrapper">
             <form>
                 <div class="input-field">
-                    <input id="search" type="search" placeholder="Search ..." required>
-                    <label for="search"><i class="material-icons">&#xE0DA;</i></label>
+                    <input id="search" type="search" required>
+                    <label for="search"><i class="material-icons">search</i></label>
                     <i class="material-icons">close</i>
                 </div>
             </form>
@@ -38,24 +39,28 @@
             </div>
         </div>
     </div>
-	<!--<div class="fixed-action-btn horizontal">
-	<a href="" class="brand-logo-center"><img src="images/footer_logo.png" width="150" height="150" draggable="false">
-	</a>
-	</div>-->
-    
-
+	<!--
 	<div class="fixed-action-btn horizontal">
 		<a class="btn-floating btn-large blue">
 		<i class="large material-icons" href="#!" id="fab-clicked">add</i>
-	</a>
+	</a>-->
 	</div>
-    <!--Import jQuery before materialize.js--> 
+	
+    <!--Import jQuery before materialize.js-->
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/sweetalert.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="text/javascript" src="js/crypto.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="cordova.js"></script>
+    <script type='application/javascript' src='js/fastclick.js'></script>
+	<script type="text/javascript" charset="utf-8"></script>
+	<!-- back button-->
+	<div style="background-color:white" id="footer">
+            <img id="footerimage" src="images/logo_footer.png" width="165" height="60" draggable="false" align="middle"/>
+            <i id="fab-clicked" class="material-icons" width="40" height="40">add</i>
+ </div>
 </body>
 
+	
 </html>
