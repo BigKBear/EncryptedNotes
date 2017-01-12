@@ -7,6 +7,13 @@ The JS file for database
 var SECRET_PHRASE = "venkatencryption";
 var db;
 var pwc = 0;
+
+swal.setDefaults({
+    showCancelButton: true,
+    allowOutsideClick: false,
+    animation: true
+});
+
 var app = {
     initialize: function() {
         this.bindEvents();
@@ -38,25 +45,47 @@ var app = {
         swal({
             title: "Please enter your password before saving your details !!",
             text: "",
-            type: "input",
-            inputType: "password",
-            showCancelButton: true,
-            closeOnConfirm: false,
-            animation: "slide-from-top",
-            inputPlaceholder: "enter your password"
-        }, function(inputValue) {
-            if (inputValue === false) {
+            input: "password",
+                confirmButtonText: 'Submit',
+                inputPlaceholder: "enter your password",
+                inputAttributes: {
+                    'maxlength': 10,
+                    'autocapitalize': 'off',
+                    'autocorrect': 'off'
+                },
+                inputValidator: function(value) {
+                    return new Promise(function(resolve, reject) {
+                      if (value) {
+                        resolve();
+                      } else {
+                        reject('You need to write something!');
+                      }
+                    });
+                  }
+        }).then(function(inputValue) {
+            /*if (inputValue === false) {
                 //alert("cancelled");
                 return false;
             }
             if (inputValue === "") {
                 swal.showInputError("Password field can't be blank");
                 return false
-            }
-            localStorage.setItem('appPsss21', inputValue);
+            }*/
+            localStorage.setItem('appPsss21',inputValue);
+            app.checkForPassword();
             swal.close();
-        });
-    },
+        }, function(dismiss) {
+              // dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
+              if (dismiss === 'cancel') {
+               // swal.close();
+             /*   swal(
+                  'Cancelled',
+                  'not opening note',
+                  'error'
+                )*/
+              }
+            });
+    },//end of createNewPasswordForInsert
 
 
     bindEvents: function() {
@@ -92,7 +121,21 @@ var app = {
             showCancelButton: true,
             closeOnConfirm: false,
             animation: "slide-from-top",
-            inputPlaceholder: "enter your password"
+            inputPlaceholder: "enter your password",
+            inputAttributes: {
+                    'maxlength': 10,
+                    'autocapitalize': 'off',
+                    'autocorrect': 'off'
+                },
+                inputValidator: function(value) {
+                    return new Promise(function(resolve, reject) {
+                      if (value) {
+                        resolve();
+                      } else {
+                        reject('You need to write something!');
+                      }
+                    });
+                  }
         }, function(inputValue) {
             if (inputValue === false) {
                 //alert("cancelled");
@@ -167,7 +210,76 @@ var app = {
             }
 
             swal({
-                title: "Enter Encryption Password to Decrypt",
+                title: "Enters Encryption Password to Decrypt",
+                text: "",
+                input: "password",
+                confirmButtonText: 'Submit',
+                inputPlaceholder: "enter your password",
+                inputAttributes: {
+                    'maxlength': 10,
+                    'autocapitalize': 'off',
+                    'autocorrect': 'off'
+                },
+                inputValidator: function(value) {
+                    return new Promise(function(resolve, reject) {
+                      if (value) {
+                        resolve();
+                      } else {
+                        reject('You need to write something!');
+                      }
+                    });
+                  }
+            }).then(function(inputValue) {
+                var pwd = localStorage.getItem('appPsss21');
+                if (inputValue === pwd) {
+                    localStorage.setItem('incorrectpwd', 0);
+                    window.location.href = "createnotes.html?msg=view" + selectedKey;
+                    swal.close();
+                } else {
+                    pwc++;
+                    localStorage.setItem('incorrectpwd', pwc);
+                    if (pwc < 6) {
+                        swal({
+                            title: 'You have entered an Incorrect password!',
+                            text: 'Please try again \n Attempt Number - ' + pwc,
+                            type: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+                        //alert("You have entered an Incorrect password!" + "\n" + "Please try again" + "\n" + "Attempt Number - " + pwc);
+                    }else if (pwc == 6) {
+                        swal({
+                            title: 'LAST ATTEMPT!',
+                            text: 'All data will be wiped if incorrectpwd is entered again!',
+                            type: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+                        //alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
+                    }else if (pwc > 6) {
+                        debugger;
+                        //alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
+                        db.transaction(function(tx) {
+                            tx.executeSql('DELETE FROM topics');
+                        });
+                        localStorage.setItem('incorrectpwd', 0);
+                        location.reload();
+                        type = "password";
+                    }
+                    //swal.close();
+                }
+            }, function(dismiss) {
+              // dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
+              if (dismiss === 'cancel') {
+               // swal.close();
+             /*   swal(
+                  'Cancelled',
+                  'not opening note',
+                  'error'
+                )*/
+              }
+            })
+
+            /*sweetAlert({
+                title: "Enters Encryption Password to Decrypt",
                 text: "",
                 type: "input",
                 inputType: type,
@@ -175,7 +287,7 @@ var app = {
                 closeOnConfirm: false,
                 animation: "slide-from-top",
                 inputPlaceholder: "enter your password"
-            }, function(inputValue) {
+            }.then(function(inputValue) {
                 if (inputValue === false) {
                     //alert("cancelled");
                     return false;
@@ -214,7 +326,7 @@ var app = {
                     }
                     swal.close();
                 }
-            });
+            },);*/
         });
     },
 
