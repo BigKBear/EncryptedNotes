@@ -12,8 +12,7 @@ swal.setDefaults({
     showCancelButton: true,
     allowOutsideClick: false,
     animation: true,
-    width: '100%',
-    height: '100%'
+    width: '100%'
 });
 
 var app = {
@@ -52,9 +51,11 @@ var app = {
      */
     checkForPassword: function() {
         var password = localStorage.getItem('appPsss21');
-        if (password == null) {
+        if (password) {
+            //password already exist
+            return;            
+        }else{
             //ask for password to enroll
-            /*app.createNewPassword();*/
             window.location = 'templates/passwordPage.html';
         }
     },
@@ -209,7 +210,7 @@ var app = {
                 type = "text";
             }
             /*password page*/
-            /*window.location = 'templates/createnotes.html';*/
+            /*window.location = 'templates/passwordPage.html?msg=view" + selectedKey';*/
 
             swal({
                 title: "Enters Encryption Password to Decrypt",
@@ -270,6 +271,8 @@ var app = {
                             type: 'error',
                             confirmButtonText: 'OK'
                         });
+                        localStorage.removeItem('appPsss21');
+                        window.location = 'templates/passwordPage.html';
                     }
                     //swal.close();
                 }

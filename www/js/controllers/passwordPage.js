@@ -2,9 +2,6 @@
 The JS file for database
 */
 //function encrypted(){
-var SECRET_PHRASE = "venkatencryption";
-var db;
-var i=0;
 var app={
 	//Application constructor
 	initialize:function() {
@@ -12,7 +9,6 @@ var app={
 	},
 	
 	bindEvents:function(){
-        alert("Hmm");
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 		document.addEventListener('DOMContentLoaded', this.onDeviceReady);    
 		if ('addEventListener' in document) {
@@ -20,29 +16,109 @@ var app={
 		        FastClick.attach(document.body);
 		    }, false);
 		}
-		document.getElementById("submitBtn").addEventListener("click", function(){  //write for update too
+        /*var submitbutton = document.getElementById("submitBtn");
+        if(submitbutton){
+          submitbutton.addEventListener("click", function(){  //write for update too
+                /*app.checkForPassword();
+                window.location='../index.html';
+            });
+        }*/
 
-			//app.checkForPassword();
-			window.location='index.html';
+		document.getElementById("submitBtn").addEventListener("click", function(){  //write for update too
+			var password = localStorage.getItem('appPsss21');
+             var inputValue = document.getElementById("userPassword").value;
+            if (password) {
+                //check that the entered value is smae as the saved password
+                if(inputValue === password){
+                    window.location='../index.html';
+                }
+                //check that the entered password is the same as the one saved
+                alert("check");
+            }else{
+                document.getElementById("userPassword").placeholder = "please create a password...";
+                //Save the entered value as the password
+                alert("value to be saved as password is: "+inputValue);
+                localStorage.setItem('appPsss21',inputValue);
+                window.location='../index.html';
+            }
 		});
 		
 	},
 	
 	onDeviceReady:function(){
-		console.log("Details of topics page triggered");
-		app.initDB();
-		app.checkForFlow();
+        //Checks to see if the user has already created a password
+		app.checkForPassword();
 	},
 
-	initDB:function(){
-		db = openDatabase('test', '1.0', 'Test DB', 2 * 1024 * 1024);
-		if(!localStorage.getItem('dbCreated-USERS')){
-		this.createDB();
-		 }
-	},
+    checkForPassword: function() {
+        var password = localStorage.getItem('appPsss21');
+        alert(password);
+        if (password == null) {
+            //ask for password to enroll
+            document.getElementById("userPassword").placeholder = "please create a password...";
+            //window.location = 'templates/passwordPage.html';
+        }else{
+            document.getElementById("userPassword").placeholder = "Enter your password ...";
+        }
+    },
 
-	checkForPassword : function() {
+    createNewPassword: function() {
+        document.getElementById("userPassword").placeholder = "please create a password...";
+       
+        if(inputValue){
+            alert(inputValue);    
+        }else{
+            alert("no value");
+        }
         
+        //localStorage.setItem('appPsss21',inputValue);
+        /*
+        swal({
+            title: "Please enter your password before saving your details !!",
+            text: "",
+            input: "password",
+                confirmButtonText: 'Submit',
+                inputPlaceholder: "enter your password",
+                inputAttributes: {
+                    'maxlength': 10,
+                    'autocapitalize': 'off',
+                    'autocorrect': 'off'
+                },
+                inputValidator: function(value) {
+                    return new Promise(function(resolve, reject) {
+                      if (value) {
+                        resolve();
+                      } else {
+                        reject("Password field can't be blank");
+                      }
+                    });
+                  }
+        }).then(function(inputValue) {
+            /*if (inputValue === false) {
+                //alert("cancelled");
+                return false;
+            }
+            if (inputValue === "") {
+                swal.showInputError("Password field can't be blank");
+                return false
+            }
+            localStorage.setItem('appPsss21',inputValue);
+            app.checkForPassword();
+            swal.close();
+        }, function(dismiss) {
+              // dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
+              if (dismiss === 'cancel') {
+               // swal.close();
+             /*   swal(
+                  'Cancelled',
+                  'not opening note',
+                  'error'
+                )
+              }
+            });*/
+    },//end of createNewPasswordForInsert
+
+	/*checkForPassword : function() {        
 		var ul = document.getElementById("fetchedValuesList"); //get the UI elements from the HTML
         ul.innerHTML = ""; //Clears all existing elements to avoid duplicate entries
         var len = results.rows.length;
@@ -134,36 +210,10 @@ var app={
                   'Cancelled',
                   'not opening note',
                   'error'
-                )*/
+                )
               }
             });
         });
-	},
-
-	successCB:function(tx,results){
-	  
-	  var ul = document.getElementById("fetchedValuesList");//get the UI elements from the HTML
-	  ul.innerHTML = "";//Clears all existing elements to avoid duplicate entries
-	    
-      var len = results.rows.length;
-        for (var i=0; i<len; i++){
-            //alert('inside for');
-			var li = document.createElement("li");//create list elements
-			li.appendChild(document.createTextNode(decryptedVl.toString(CryptoJS.enc.Utf8)));// add the data to the list element
-			ul.appendChild(li);//add the list to UL
-        }
-		$("#fetchedValuesList li").on('click', function(e) {
-			//alert('inside fetchedvalue');
-			openIndividualEle($(this)[0].innerHTML);
-		});
-    },
-
-	openIndividualEle:function(ele)  {
-		//alert('clicked element --------   '+ele);
-	},
-    
-	errorCB:function(e){
-	  alert('error creating table');
-    }
+	},*/
 };
 app.initialize();
