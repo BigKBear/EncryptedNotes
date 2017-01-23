@@ -1,219 +1,154 @@
 /*
-The JS file for database
+The JS file for the password page
 */
-//function encrypted(){
+var pwc = 0;
+var db;
 var app={
-	//Application constructor
-	initialize:function() {
-		this.bindEvents();
-	},
-	
-	bindEvents:function(){
-		document.addEventListener('deviceready', this.onDeviceReady, false);
-		document.addEventListener('DOMContentLoaded', this.onDeviceReady);    
-		if ('addEventListener' in document) {
-		    document.addEventListener('DOMContentLoaded', function() {
-		        FastClick.attach(document.body);
-		    }, false);
-		}
-        /*var submitbutton = document.getElementById("submitBtn");
-        if(submitbutton){
-          submitbutton.addEventListener("click", function(){  //write for update too
-                /*app.checkForPassword();
-                window.location='../index.html';
-            });
-        }*/
+    //Application constructor
+    initialize:function() {
+        this.bindEvents();
+    },
+    
+    bindEvents:function(){
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+        document.addEventListener('DOMContentLoaded', this.onDeviceReady);    
+        if ('addEventListener' in document) {
+            document.addEventListener('DOMContentLoaded', function() {
+                FastClick.attach(document.body);
+            }, false);
+        }
+        document.getElementById("submitBtn").addEventListener("click", function(){  //write for update too
+            var password = localStorage.getItem('appPsss21');
+            var inputValue = document.getElementById("userPassword").value;
+            var idx = document.URL;
+            var rowid = idx.split("msg=view")[1];
 
-		document.getElementById("submitBtn").addEventListener("click", function(){  //write for update too
-			var password = localStorage.getItem('appPsss21');
-             var inputValue = document.getElementById("userPassword").value;
+            /*alert(idx.indexOf("?msg=view"));*/
             if (password) {
-                //check that the entered value is smae as the saved password
-                if(inputValue === password){
-                    window.location='../index.html';
-                }
-                //check that the entered password is the same as the one saved
-                alert("check");
+                if(inputValue){
+                    //check that the entered value is the same as the saved password
+                    if((inputValue === password)&&(rowid)){
+                        //Go to the selected note page
+                        window.location.href = "../templates/createnotes.html?msg=view" + rowid;
+                    }else{
+                        pwc++;
+                        localStorage.setItem('incorrectpwd', pwc);
+                        if (pwc > 3) {
+                            document.getElementById("userPassword").type = "text";
+                        }
+                        if (pwc < 6) {
+                            swal({
+                                title: 'You have entered an Incorrect password!',
+                                text: 'Please try again \n Attempt Number - ' + pwc,
+                                type: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then(function() {
+                                app.resetPasswrodField();
+                                //location.reload();
+                            });   
+                            //alert("You have entered an Incorrect password!" + "\n" + "Please try again" + "\n" + "Attempt Number - " + pwc);
+                        }else if (pwc == 6) {
+                            swal({
+                                title: 'LAST ATTEMPT!',
+                                text: 'All data will be wiped if incorrectpwd is entered again!',
+                                type: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then(function() {
+                                app.resetPasswrodField();
+                            });  
+                            //alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
+                        }else if (pwc > 6) {
+                            /*DELETE taple called topics*/
+                            db.transaction(function(tx) {
+                                tx.executeSql('DELETE FROM topics');
+                            });
+                            localStorage.setItem('incorrectpwd', 0);
+                            swal({
+                                title: 'DELETED!',
+                                text: 'All data has been wiped!',
+                                type: 'error',
+                                confirmButtonText: 'OK'
+                            }).then(function() {
+                                /*setTimeout(function(){ window.location = '../index.html'; }, 2000);*/
+                                window.location = '../index.html';
+                            });
+                            /*Take user back to list page*/
+                        }else{
+                            alert("Something went wrong with the app please reinstall.");
+                        }
+                    }
+                }else{
+                    swal({
+                            title: 'Check Password!',
+                            text: 'Password field can not be blank.',
+                            type: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then(function() {
+                            app.resetPasswrodField();
+                        });  
+                }                
             }else{
-                document.getElementById("userPassword").placeholder = "please create a password...";
                 //Save the entered value as the password
-                alert("value to be saved as password is: "+inputValue);
-                localStorage.setItem('appPsss21',inputValue);
-                window.location='../index.html';
+                swal({
+                            title: 'Password saved!',
+                            text: 'Your password is: ' + inputValue,
+                            type: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(function() {
+                            localStorage.setItem('appPsss21',inputValue);
+                            window.location='../index.html';
+                        }); 
             }
-		});
-		
-	},
-	
-	onDeviceReady:function(){
+        });
+    },
+
+    resetPasswrodField:function(){
+        document.getElementById("userPassword").value = null;
+        document.getElementById("userPassword").placeholder = "Enters Encryption Password to Decrypt ...";
+    },
+    
+    onDeviceReady:function(){
         //Checks to see if the user has already created a password
-		app.checkForPassword();
-	},
+        app.checkForPassword();
+        app.initDB();
+        document.addEventListener("backbutton", app.onBackKeyDown, true);
+    },
+
+    onBackKeyDown: function(e) {
+        //do nothing, it will stand in same place.
+        window.location = '../index.html';
+    },
+    initDB: function() {
+        db = openDatabase('test', '1.0', 'Test DB', 2 * 1024 * 1024);
+        if (!localStorage.getItem('dbCreated-USERS')) {
+            this.createDB();
+        } else {
+            this.fetchedValuesList();
+        }
+    },
+    createDB: function() {
+        localStorage.setItem('dbCreated-USERS', true);
+        db.transaction(function(tx) {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS topics (topic unique, desc)');
+
+        });
+    },
+    fetchedValuesList: function() {
+        db.transaction(function(tx) {
+            //tx.executeSql('DELETE FROM topics');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS topics (topic unique, desc)');//user manually delete the table table recreate auto
+            tx.executeSql('SELECT * FROM topics', [], app.successCB, app.errorCB);
+        });
+    },
 
     checkForPassword: function() {
         var password = localStorage.getItem('appPsss21');
-        alert(password);
-        if (password == null) {
+        if (password) {
+            app.resetPasswrodField();
+        }else{
             //ask for password to enroll
             document.getElementById("userPassword").placeholder = "please create a password...";
-            //window.location = 'templates/passwordPage.html';
-        }else{
-            document.getElementById("userPassword").placeholder = "Enter your password ...";
         }
-    },
-
-    createNewPassword: function() {
-        document.getElementById("userPassword").placeholder = "please create a password...";
-       
-        if(inputValue){
-            alert(inputValue);    
-        }else{
-            alert("no value");
-        }
-        
-        //localStorage.setItem('appPsss21',inputValue);
-        /*
-        swal({
-            title: "Please enter your password before saving your details !!",
-            text: "",
-            input: "password",
-                confirmButtonText: 'Submit',
-                inputPlaceholder: "enter your password",
-                inputAttributes: {
-                    'maxlength': 10,
-                    'autocapitalize': 'off',
-                    'autocorrect': 'off'
-                },
-                inputValidator: function(value) {
-                    return new Promise(function(resolve, reject) {
-                      if (value) {
-                        resolve();
-                      } else {
-                        reject("Password field can't be blank");
-                      }
-                    });
-                  }
-        }).then(function(inputValue) {
-            /*if (inputValue === false) {
-                //alert("cancelled");
-                return false;
-            }
-            if (inputValue === "") {
-                swal.showInputError("Password field can't be blank");
-                return false
-            }
-            localStorage.setItem('appPsss21',inputValue);
-            app.checkForPassword();
-            swal.close();
-        }, function(dismiss) {
-              // dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
-              if (dismiss === 'cancel') {
-               // swal.close();
-             /*   swal(
-                  'Cancelled',
-                  'not opening note',
-                  'error'
-                )
-              }
-            });*/
-    },//end of createNewPasswordForInsert
-
-	/*checkForPassword : function() {        
-		var ul = document.getElementById("fetchedValuesList"); //get the UI elements from the HTML
-        ul.innerHTML = ""; //Clears all existing elements to avoid duplicate entries
-        var len = results.rows.length;
-        var selectedIndex = 0;
-        //outer for loop to populate the list in the search box
-        for (var i = 0; i < len; i++) {
-            if (results.rows.item(i).topic.length > 0) {
-                var li = document.createElement("li"); //create list elements 
-                li.setAttribute("class", "collection-item");
-                li.appendChild(document.createTextNode(results.rows.item(i).topic)); // add the data to the list element
-                ul.appendChild(li); //add the list to UL 
-            }
-        }
-		$('ul').children('li').on('click', function() {
-            selectedIndex = $(this).index();
-            var selectedKey = $(this).text();
-            var type = "password";
-            if (pwc > 3) {
-                type = "text";
-            }
-
-            swal({
-                title: "Enters Encryption Password to Decrypt",
-                text: "",
-                input: type,
-                confirmButtonText: 'Submit',
-                inputPlaceholder: "enter your password",
-                inputAttributes: {
-                    'maxlength': 10,
-                    'autocapitalize': 'off',
-                    'autocorrect': 'off'
-                },
-                inputValidator: function(value) {
-                    return new Promise(function(resolve, reject) {
-                      if (value) {
-                        resolve();
-                      } else {
-                        reject("Password field can't be blank");
-                      }
-                    });
-                  }
-            }).then(function(inputValue) {
-                var pwd = localStorage.getItem('appPsss21');
-                if (inputValue === pwd) {
-                    localStorage.setItem('incorrectpwd', 0);
-                    window.location.href = "templates/createnotes.html?msg=view" + selectedKey;
-                    swal.close();
-                } else {
-                    pwc++;
-                    localStorage.setItem('incorrectpwd', pwc);
-                    if (pwc < 6) {
-                        swal({
-                            title: 'You have entered an Incorrect password!',
-                            text: 'Please try again \n Attempt Number - ' + pwc,
-                            type: 'warning',
-                            confirmButtonText: 'OK'
-                        });
-                        //alert("You have entered an Incorrect password!" + "\n" + "Please try again" + "\n" + "Attempt Number - " + pwc);
-                    }else if (pwc == 6) {
-                        swal({
-                            title: 'LAST ATTEMPT!',
-                            text: 'All data will be wiped if incorrectpwd is entered again!',
-                            type: 'warning',
-                            confirmButtonText: 'OK'
-                        });
-                        //alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
-                    }else if (pwc > 6) {
-                        //alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
-                        db.transaction(function(tx) {
-                            tx.executeSql('DELETE FROM topics');
-                        });
-                        localStorage.setItem('incorrectpwd', 0);
-                        location.reload();
-                        type = "password";
-                        swal({
-                            title: 'DELETED!',
-                            text: 'All data has been wiped!',
-                            type: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                    //swal.close();
-                }
-            }, function(dismiss) {
-              // dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
-              if (dismiss === 'cancel') {
-               // swal.close();
-             /*   swal(
-                  'Cancelled',
-                  'not opening note',
-                  'error'
-                )
-              }
-            });
-        });
-	},*/
+    }
 };
 app.initialize();

@@ -53,7 +53,7 @@ var app = {
         var password = localStorage.getItem('appPsss21');
         if (password) {
             //password already exist
-            return;            
+            return;
         }else{
             //ask for password to enroll
             window.location = 'templates/passwordPage.html';
@@ -178,7 +178,6 @@ var app = {
         localStorage.setItem('dbCreated-USERS', true);
         db.transaction(function(tx) {
             tx.executeSql('CREATE TABLE IF NOT EXISTS topics (topic unique, desc)');
-
         });
     },
     fetchedValuesList: function() {
@@ -210,9 +209,9 @@ var app = {
                 type = "text";
             }
             /*password page*/
-            /*window.location = 'templates/passwordPage.html?msg=view" + selectedKey';*/
+            window.location = "templates/passwordPage.html?msg=view" + selectedKey;
 
-            swal({
+          /*  swal({
                 title: "Enters Encryption Password to Decrypt",
                 text: "",
                 input: type,
@@ -280,13 +279,8 @@ var app = {
               // dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
               if (dismiss === 'cancel') {
                // swal.close();
-             /*   swal(
-                  'Cancelled',
-                  'not opening note',
-                  'error'
-                )*/
               }
-            });//end of the .then function
+            });//end of the .then function*/
         });//end of item in list clicked
     },
 
