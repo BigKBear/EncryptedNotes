@@ -20,6 +20,7 @@ var app={
         document.getElementById("submitBtn").addEventListener("click", function(){  //write for update too
             var password = localStorage.getItem('appPsss21');
             var inputValue = document.getElementById("userPassword").value;
+            var confirmValue = document.getElementById("userconfirmPassword").value;
             var idx = document.URL;
             var rowid = idx.split("msg=view")[1];
 
@@ -43,7 +44,7 @@ var app={
                                 type: 'warning',
                                 confirmButtonText: 'OK'
                             }).then(function() {
-                                app.resetPasswrodField();
+                                app.resetPasswordField();
                                 //location.reload();
                             });   
                             //alert("You have entered an Incorrect password!" + "\n" + "Please try again" + "\n" + "Attempt Number - " + pwc);
@@ -54,7 +55,7 @@ var app={
                                 type: 'warning',
                                 confirmButtonText: 'OK'
                             }).then(function() {
-                                app.resetPasswrodField();
+                                app.resetPasswordField();
                             });  
                             //alert("LAST ATTEMPT! \n All data will be wiped if incorrectpwd is entered again");
                         }else if (pwc > 6) {
@@ -84,29 +85,45 @@ var app={
                             type: 'warning',
                             confirmButtonText: 'OK'
                         }).then(function() {
-                            app.resetPasswrodField();
+                            app.resetPasswordField();
                         });  
                 }                
             }else{
-                //Save the entered value as the password
-                swal({
-                            title: 'Password saved!',
-                            text: 'Your password is: ' + inputValue,
-                            type: 'success',
-                            confirmButtonText: 'OK'
-                        }).then(function() {
-                            localStorage.setItem('appPsss21',inputValue);
-                            window.location='../index.html';
-                        }); 
+                if(confirmValue){
+                    app.checkConfirmPassword(inputValue,confirmValue);
+                }else{
+                    swal({
+                        title: 'Confirm password',
+                        text: 'Please confirm your password by entering the same value as your password in the confirm password area',
+                        type: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then(function() {
+                        app.resetPasswordAndConfirmPasswordFields();
+                    }); 
+                }
+                
             }
         });
     },
 
-    resetPasswrodField:function(){
-        document.getElementById("userPassword").value = null;
-        document.getElementById("userPassword").placeholder = "Enters Encryption Password to Decrypt ...";
+    resetPasswordField:function(){
+        var password = localStorage.getItem('appPsss21');
+        if(password){            
+            document.getElementById("userPassword").value = null;
+            document.getElementById("userPassword").placeholder = "Enters Encryption Password to Decrypt ...";
+        }else{
+            document.getElementById("userPassword").value = null;
+            document.getElementById("userPassword").placeholder = "Please create a password...";
+        }        
     },
-    
+    resetConfirmPasswordField:function(){
+        document.getElementById("userconfirmPassword").value = null;
+        document.getElementById("userconfirmPassword").placeholder = "Please confirm your password here...";
+    },
+    resetPasswordAndConfirmPasswordFields:function(){
+        app.resetPasswordField();
+        app.resetConfirmPasswordField();
+    },    
     onDeviceReady:function(){
         //Checks to see if the user has already created a password
         app.checkForPassword();
@@ -140,15 +157,40 @@ var app={
             tx.executeSql('SELECT * FROM topics', [], app.successCB, app.errorCB);
         });
     },
-
     checkForPassword: function() {
         var password = localStorage.getItem('appPsss21');
         if (password) {
-            app.resetPasswrodField();
+            $("#userconfirmPassword").hide();
+            app.resetPasswordField();
         }else{
-            //ask for password to enroll
-            document.getElementById("userPassword").placeholder = "please create a password...";
+            //ask for password and confirm password to enroll
+            $("#userconfirmPassword").show();
+            app.resetPasswordAndConfirmPasswordFields();
         }
-    }
+    },
+    checkConfirmPassword: function(inputValue,confirmValue){
+        if(inputValue != confirmValue){
+            swal({
+                    title: 'Passwords do NOT match!',
+                    text: 'please reenter BOTH values.',
+                    type: 'error',
+                    confirmButtonText: 'OK'
+                }).then(function() {
+                    app.resetPasswordAndConfirmPasswordFields();
+                });
+        }else{
+            //Save the entered value as the password
+            swal({
+                    title: 'Password saved!',
+                    text: 'Your password is: ' + inputValue,
+                    type: 'success',
+                    confirmButtonText: 'OK'
+                    //}
+                }).then(function() {
+                    localStorage.setItem('appPsss21',inputValue);
+                    window.location='../index.html';
+                }); 
+            }
+    }    
 };
 app.initialize();
