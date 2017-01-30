@@ -172,7 +172,8 @@ var app={
         if(inputValue != confirmValue){
             swal({
                     title: 'Passwords do NOT match!',
-                    text: 'please reenter BOTH values.',
+                    //text: 'please reenter BOTH values.',
+					text: 'please enter the same password twice',
                     type: 'error',
                     confirmButtonText: 'OK'
                 }).then(function() {
@@ -182,7 +183,7 @@ var app={
             //Save the entered value as the password
             swal({
                     title: 'Password saved!',
-                    text: 'Your password is: ' + inputValue,
+                    //text: 'Your password is: ' + inputValue,
                     type: 'success',
                     confirmButtonText: 'OK'
                     //}
