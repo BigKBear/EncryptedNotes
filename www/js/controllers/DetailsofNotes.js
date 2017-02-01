@@ -144,15 +144,13 @@ var app = {
         var desc = document.getElementById("topicdesc").value;
         //encrpt here and store in var
         if (topicname.length == 0 && desc.length == 0) {
-            alert("Either the note title or description was incorrect.");
-            return;
-        }else if (topicname != null && desc != null) {
+            return; }
+
+        if (topicname != null && desc != null) {
             desc = CryptoJS.AES.encrypt(desc, SECRET_PHRASE);
             db.transaction(function(tx) {
                 tx.executeSql('INSERT INTO topics (topic, desc) VALUES (?, ?)', [topicname, desc]);
             });
-        }else{
-            alert("The entered values could not be inserted");
         }
     },
     updateValue: function() {
@@ -185,15 +183,13 @@ var app = {
         var desc = document.getElementById("topicdesc").value;
         //decrypt here and store in var
         if (topicname.length == 0 && desc.length == 0) {
-            alert("Either the note title or description was incorrect.");
-            return; 
-        }else if (topicname != null && desc != null) {
+            return; }
+
+        if (topicname != null && desc != null) {
             desc = CryptoJS.AES.decrypt(desc, SECRET_PHRASE);
             db.transaction(function(tx) {
                 tx.executeSql('INSERT INTO topics (topic, desc) VALUES (?, ?)', [topicname, desc]);
             });
-        }else{
-            alert("Inserting decrypted value error.");
         }
     },
 
