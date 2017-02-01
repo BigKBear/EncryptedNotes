@@ -113,12 +113,12 @@ var app={
             document.getElementById("userPassword").placeholder = "Enters Encryption Password to Decrypt ...";
         }else{
             document.getElementById("userPassword").value = null;
-            document.getElementById("userPassword").placeholder = "Please create a password...";
+            document.getElementById("userPassword").placeholder = "Please create a password";
         }        
     },
     resetConfirmPasswordField:function(){
         document.getElementById("userconfirmPassword").value = null;
-        document.getElementById("userconfirmPassword").placeholder = "Please confirm your password here...";
+        document.getElementById("userconfirmPassword").placeholder = "Please confirm your password";
     },
     resetPasswordAndConfirmPasswordFields:function(){
         app.resetPasswordField();
@@ -182,7 +182,7 @@ var app={
             //Save the entered value as the password
             swal({
                     title: 'Password saved!',
-                    text: 'Your password is: ' + inputValue,
+                    //text: 'Your password is: ' + inputValue,
                     type: 'success',
                     confirmButtonText: 'OK'
                     //}
