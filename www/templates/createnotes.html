@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>            
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+
+        <!--Import Google Icon Font-->
+        <link rel="stylesheet" type="text/css" href="../css/sweetalert2.min.css">
+        <link rel="stylesheet" href="../css/createnotes.css">
+        <link type="text/css" rel="stylesheet" href="../css/material_icons.css">
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection" />
+    </head>
+
+    <body>
+        <div class="navbar-fixed">
+            <nav class = "white">
+                <div style="background-color:white" class="nav-wrapper">
+                    <a href="" style="color:black" class="brand-logo-center" ><img src="../images/icon.png" width="36" height="36" draggable="false" align="center"><b><font size="4">ENCRYPTED NOTES</font></i></b></a>
+                </div>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col s12 m12">
+                <div class="card-panel">
+
+                <div class="center-align">
+                        <div id="success" class='success' style='display:none'>Success</div>
+                        <div id="topicexistalready" class='topicalreadyexist' style='display:none'>Title Already Exists</div>
+                        <div id="emptyfields" class='emptyfields' style='display:none'>Empty Fields</div>
+                        <button class="waves-effect waves-light btn grey" id="backBtn">Back</button>
+                        <button class="waves-effect waves-light btn grey" id="saveBtn" autocomplete="off">Save</button>
+                        <button class="waves-effect waves-light btn grey" id="updateBtn">Update</button>
+                        <p>
+                            <button class="waves-effect waves-light btn grey" id="deleteBtn">Delete</button>
+                        </p>
+                </div>
+
+                    <div class="row">
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <textarea id="topicname" class="materialize-textarea"></textarea>
+                                    <label for="topicname">Title</label>
+                                </div>
+                                <div class="input-field col s12">
+                                    <textarea id="topicdesc" class="scrollabletextbox" style="width:250px;height:150px;"></textarea>
+                                    <label for="topicdesc">Notes</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- <div class="center-align">
+                        <div id="success" class='success' style='display:none'>Success</div>
+                        <div id="topicexistalready" class='topicalreadyexist' style='display:none'>Title Already Exists</div>
+                        <div id="emptyfields" class='emptyfields' style='display:none'>Empty Fields</div>
+                        <button class="waves-effect waves-light btn grey" id="backBtn">Back</button>
+                        <button class="waves-effect waves-light btn grey" id="saveBtn">Save</button>
+                        <button class="waves-effect waves-light btn grey" id="updateBtn">Update</button>
+        				<p>
+                            <button class="waves-effect waves-light btn grey" id="deleteBtn">Delete</button>
+                        </p>
+                    </div> -->
+                </div>    	
+            </div>
+        </div>
+        <div style="background-color:white" id="footer">
+            <img id="footerimage" src="../images/logo_footer.png" width="165" height="60" draggable="false" align="middle"/>
+        </div>
+    </body>
+
+    <!-- Controller -->
+    <script type="text/javascript" src="../js/controllers/createnotes.js"></script>
+
+    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script src="../js/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
+    <script type="text/javascript" src="../js/crypto.js"></script>
+    <script type="text/javascript" src='../js/phonegap-toast.js'></script>
+    <script type='application/javascript' src='../js/fastclick.js'></script>
+</html>

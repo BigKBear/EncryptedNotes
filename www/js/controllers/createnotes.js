@@ -26,18 +26,24 @@ var app={
 		        FastClick.attach(document.body);
 		    }, false);
 		}
-		document.getElementById("saveBtn").addEventListener("click", function(){  //write for update too
+		var savebutton = document.getElementById("saveBtn");
+		if(savebutton){
+		  savebutton.addEventListener("click", function(){  //write for update too
+				app.checkForPassword();
+				//window.location='../index.html';
+			});
+		}
 
-			app.checkForPassword();
-			//window.location='index.html';
-		});
-		document.getElementById("updateBtn").addEventListener("click", function(){  //write for update too
-			app.checkForPassword();
-			var delay=1000;//*
-			setTimeout(function() {//*
-				window.location='index.html';
-			}, delay);//*
-		});
+		var updatebutton = document.getElementById("updateBtn");
+		if(updatebutton){
+			updatebutton.addEventListener("click", function(){  //write for update too
+				app.checkForPassword();
+				var delay=1000;//*
+				setTimeout(function() {//*
+					window.location='../index.html';
+				}, delay);//*
+			});
+		}
 		document.getElementById("backBtn").addEventListener("click", function(){
 			app.back();
 		});
@@ -47,7 +53,7 @@ var app={
 			var delay=1000; //1 second
 
 			setTimeout(function() {
-			  window.location='index.html';
+			  window.location='../index.html';
 			}, delay);
 
 		});
@@ -58,7 +64,7 @@ var app={
 		    if (deleteUser) {
 		      app.checkForPasswordDelete();
 		    }else{
-		    	window.location='index.html';
+		    	window.location='../index.html';
 		    }
 	},
 	//deviceready Event Handler
@@ -180,11 +186,27 @@ var app={
      	var desc = document.getElementById("topicdesc").value;
 		//encrpt here and store in var		
 		if(topicname.length == 0 && desc.length == 0){
-			$('.emptyfields').stop().fadeIn(400).delay(3000).fadeOut(400);
+			//$('.emptyfields').stop().fadeIn(400).delay(3000).fadeOut(400);
+			swal({
+					  title: 'Error with fields!',
+					  text: 'emptyfields.',
+					  showConfirmButton: false,
+					  timer: 2000
+					}).then(
+					  function () {},
+					  // handling the promise rejection
+					  function (dismiss) {
+					    if (dismiss === 'timer') {
+					      console.log('I was closed by the timer');
+					    }
+					  }
+					);
 			return false;
 		}else if(topicname!=null && desc!=null){
 			//check that topic does not already exist
 			app.doesTopicExist(topicname,desc);
+		}else{
+			alert("Inserting value error.");
 		}
     },
      doesTopicExist:function(topicnametobechecked, desctobeadded){
@@ -193,7 +215,21 @@ var app={
     			var len = results.rows.length, i;
     			if(len>0){
     				//Materialize.toast('Topic exist already', 4000);
-					$('.topicalreadyexist').stop().fadeIn(400).delay(3000).fadeOut(400);
+					//$('.topicalreadyexist').stop().fadeIn(400).delay(3000).fadeOut(400);
+					swal({
+					  title: 'Topic error!',
+					  text: 'topicalreadyexist.',
+					  showConfirmButton: false,
+					  timer: 2000
+					}).then(
+					  function () {},
+					  // handling the promise rejection
+					  function (dismiss) {
+					    if (dismiss === 'timer') {
+					      console.log('I was closed by the timer');
+					    }
+					  }
+					);
 					return false;
     			}else{
 					desctobeadded = CryptoJS.AES.encrypt(desctobeadded,SECRET_PHRASE);
@@ -202,7 +238,7 @@ var app={
 			        });
 			        var delay=1000; //1 second
 					setTimeout(function() {
-					  window.location='index.html';
+					  window.location='../index.html';
 					}, delay);
     			}
     		},null);
@@ -215,9 +251,11 @@ var app={
 		//var rowid = idx.split("msg=view")[1];
 		//alert("It is desc check"+desc);
 		//encrpt here and store in var
-		if(topicname.length == 0 && desc.length == 0){return;}
-		
-		if(topicname!=null && desc!=null){
+		if(topicname.length == 0 && desc.length == 0){
+			alert("Either the note title or description was incorrect.");
+			return;
+		}
+		else if(topicname!=null && desc!=null){
 			 //alert('updated before decrypt desc'+desc);
 			 desc = CryptoJS.AES.encrypt(desc,SECRET_PHRASE);	
 	         db.transaction(function (tx) {
@@ -226,6 +264,8 @@ var app={
 				 //desc = CryptoJS.AES.encrypt(desc,SECRET_PHRASE);
 				 //alert('updated after decrypt desc'+desc);
 	        });
+		}else{
+			alert("Error updating value.");
 		}
     },
 	
@@ -249,14 +289,17 @@ var app={
 		var desc = document.getElementById("topicdesc").value;
 		var idx = document.URL;
 		var rowid = idx.split("msg=view")[1];
-		if(topicname.length == 0 && desc.length == 0){return;}
-		
-		if(topicname!=null && desc!=null){
+		if(topicname.length == 0 && desc.length == 0){
+			alert("Either the note title or description was incorrect.");
+			return;
+		}else if(topicname!=null && desc!=null){
 			db.transaction(function (tx) {
 				//The below line clears the current table in the database with out deleting the table it self
 				//tx.executeSql("DELETE FROM topics",app.onInsertSuccess,app.onInsertError);
 				tx.executeSql("DELETE FROM topics WHERE topic=?",[topicname],onInsertSuccess,onInsertError);
 			});
+		}else{
+			alert("Error deleting value.");
 		}
 	},
 
@@ -280,7 +323,7 @@ var app={
 	},*/
 	
 	back:function(){
-		window.location='index.html';
+		window.location='../index.html';
 	},
 	successCB:function(tx,results){
 	  
@@ -310,12 +353,26 @@ app.initialize();
 
 function onInsertSuccess(){
 	//alert('success');
-	$('.success').stop().fadeIn(400).delay(3000).fadeOut(400);
+	//$('.success').stop().fadeIn(400).delay(3000).fadeOut(400);
+	swal({
+		title: 'SUCCESS!',
+		showConfirmButton: false,
+	  	type: 'success',
+    	timer: 2000
+	}).then(
+	  function () {},
+	  // handling the promise rejection
+	  function (dismiss) {
+	    if (dismiss === 'timer') {
+	      console.log('I was closed by the timer');
+	    }
+	  }
+	);
 }
 
 function onInsertError(e){
 	//debugger;
 	alert("This title already exists!" + "\n" +"Please select a unique title name");
-	window.location='createnotes.html';
+	window.location='templates/createnotes.html';
 	//$('success').stop().fadeIn(400).delay(3000).fadeOut(400);
 }
