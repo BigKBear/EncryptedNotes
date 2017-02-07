@@ -19,6 +19,7 @@ var app={
 	//Bind any events that are required on startup. Common events are:
 	//'load', 'deviceready', 'offline' and 'online'.
 	bindEvents:function(){
+//		document.getElementById("myDropdownMenu").toggle("hide");
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 		document.addEventListener('DOMContentLoaded', this.onDeviceReady);    
 		if ('addEventListener' in document) {
@@ -34,6 +35,14 @@ var app={
 			});
 		}
 
+		var savebuttonTop = document.getElementById("saveBtnTop");
+		if(savebuttonTop){
+		  savebuttonTop.addEventListener("click", function(){  //write for update too
+				app.checkForPassword();
+				//window.location='../index.html';
+			});
+		}
+
 		var updatebutton = document.getElementById("updateBtn");
 		if(updatebutton){
 			updatebutton.addEventListener("click", function(){  //write for update too
@@ -44,10 +53,34 @@ var app={
 				}, delay);//*
 			});
 		}
-		document.getElementById("backBtn").addEventListener("click", function(){
-			app.back();
-		});
-		document.getElementById("deleteBtn").addEventListener("click",function(){
+
+		var updatebuttonTop = document.getElementById("updateBtnTop");
+		if(updatebuttonTop){
+			updatebuttonTop.addEventListener("click", function(){  //write for update too
+				app.checkForPassword();
+				var delay=1000;//*
+				setTimeout(function() {//*
+					window.location='../index.html';
+				}, delay);//*
+			});
+		}
+		var backbutton = document.getElementById("backBtn");
+		if(backbutton){
+			backbutton.addEventListener("click", function(){
+				app.back();
+			});
+		}
+
+		var backbuttonTop = document.getElementById("backBtnTop");
+		if(backbuttonTop){
+			backbuttonTop.addEventListener("click", function(){
+				app.back();
+			});
+		}
+		
+		var deletebutton = document.getElementById("deleteBtn");
+		if(deletebutton){
+			deletebutton.addEventListener("click",function(){
 			//ask user are you sure
 			app.askUserBeforeDelete();
 			var delay=1000; //1 second
@@ -55,8 +88,32 @@ var app={
 			setTimeout(function() {
 			  window.location='../index.html';
 			}, delay);
+			});
+		}
 
-		});
+		var deletebuttonTop = document.getElementById("deleteBtnTop");
+		if(deletebuttonTop){
+				deletebuttonTop.addEventListener("click",function(){
+				//ask user are you sure
+				app.askUserBeforeDelete();
+				var delay=1000; //1 second
+
+				setTimeout(function() {
+				  window.location='../index.html';
+				}, delay);
+
+			});
+		}
+
+		var menubutton = document.getElementById("deleteBtnTop");
+		if(menubutton){
+				menubutton.addEventListener("click",function(){
+				document.getElementById("myDropdownMenu").toggle("show");
+
+			});
+		}
+
+
 	},
 	askUserBeforeDelete:function(){
 		 var deleteUser = window.confirm('Are you sure you want to delete this item?');
@@ -87,6 +144,10 @@ var app={
 			$("#updateBtn").show();
 			$("#saveBtn").hide();
 			$("#deleteBtn").show();
+
+			$("#updateBtnTop").show();
+			$("#saveBtnTop").hide();
+			$("#backBtnTop").show();
 		    var rowid = idx.split("msg=view")[1];
 		    rowid = decodeURI(rowid);
 		    db.transaction(function(tx) {
@@ -97,9 +158,13 @@ var app={
         	});
 		}
 		else{
-			$("#updateBtn").hide();//
+			$("#updateBtn").hide();
 			$("#saveBtn").show();
 			$("#deleteBtn").hide();
+			
+			$("#updateBtnTop").hide();
+			$("#saveBtnTop").show();
+			$("#deleteBtnTop").hide();
 		}
 		
 	},
@@ -182,7 +247,7 @@ var app={
 		
 	},
 	insertValue:function(){
-		var topicname = document.getElementById("topicname").value;
+		var topicname = document.getElementById("topicname").value.trim();
      	var desc = document.getElementById("topicdesc").value;
 		//encrpt here and store in var		
 		if(topicname.length == 0 && desc.length == 0){
@@ -243,7 +308,7 @@ var app={
     	});
     },
 	updateValue:function(){
-        var topicname = document.getElementById("topicname").value;
+        var topicname = document.getElementById("topicname").value.trim();
 		var desc = document.getElementById("topicdesc").value;
 		//var idx = document.URL;
 		//var rowid = idx.split("msg=view")[1];
@@ -269,7 +334,7 @@ var app={
 	
 	//decrypt function
 	/*insertdecrypt:function(){
-		var topicname = document.getElementById("topicname").value;
+		var topicname = document.getElementById("topicname").value.trim();
 		var desc = document.getElementById("topicdesc").value;
 		
 		//decrypt here and store in var
@@ -283,7 +348,7 @@ var app={
 		}
 	},*/	
 	deleteValue:function(){
-		var topicname = document.getElementById("topicname").value;
+		var topicname = document.getElementById("topicname").value.trim();
 		var desc = document.getElementById("topicdesc").value;
 		var idx = document.URL;
 		var rowid = idx.split("msg=view")[1];
@@ -303,7 +368,7 @@ var app={
 
 	/*
 	deleteValue:function(){
-		var topicname = document.getElementById("topicname").value;
+		var topicname = document.getElementById("topicname").value.trim();
 		var desc = document.getElementById("topicdesc").value;
 		var idx = document.URL;
 		var i = 0;
@@ -374,3 +439,24 @@ function onInsertError(e){
 	window.location='templates/createnotes.html';
 	//$('success').stop().fadeIn(400).delay(3000).fadeOut(400);
 }
+
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+/*function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}*/

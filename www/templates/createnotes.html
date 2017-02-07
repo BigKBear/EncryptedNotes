@@ -13,29 +13,49 @@
     </head>
 
     <body>
-        <div class="navbar-fixed">
-            <nav class = "white">
+        <div class="navbar-fixed white">
+            <nav class = "white">            
                 <div style="background-color:white" class="nav-wrapper">
-                    <a href="" style="color:black" class="brand-logo-center" ><img src="../images/icon.png" width="36" height="36" draggable="false" align="center"><b><font size="4">ENCRYPTED NOTES</font></i></b></a>
+                    <a href="" style="color:black" class="brand-logo-center" >
+                        <img src="../images/icon.png" width="36" height="36" draggable="false" align="center">
+                            <b>
+                                <font size="4">
+                                    ENCRYPTED NOTES 
+                                </font>                            
+                            </b>
+                        </img>
+                    </a>
+                    <div class="nav-left">
+                        <p height="36" style="background-color:white"> <i style="color:black" id="backBtnTop" class="material-icons md-10">chevron_left</i></p>
+                    </div>
+                    
+                    <div class="nav-right">
+
+                      <p height="36" style="background-color:white" id="myDropdown"><i style="color:black" class="material-icons md-30">more_vert</i></p>
+                      <div id="myDropdownMenu" class="dropdown-content">
+                        <ul>
+                            <li><button class="waves-effect waves-light btn blue" id="backBtnTop"  text-align="left">Back</button></li>
+                            <li><button class="waves-effect waves-light btn blue" id="saveBtnTop"  text-align="left">Save</button></li>
+                            <li><button class="waves-effect waves-light btn blue" id="updateBtnTop" text-align="left">Update</button></li>
+                            <li><button class="waves-effect waves-light btn blue" id="deleteBtnTop" text-align="left">Delete</button></li>
+                        </ul>
+                      </div>
+                    </div>
                 </div>
             </nav>
         </div>
+               
         <div class="row">
             <div class="col s12 m12">
                 <div class="card-panel">
-
-                <div class="center-align">
-                        <div id="success" class='success' style='display:none'>Success</div>
-                        <div id="topicexistalready" class='topicalreadyexist' style='display:none'>Title Already Exists</div>
-                        <div id="emptyfields" class='emptyfields' style='display:none'>Empty Fields</div>
-                        <button class="waves-effect waves-light btn grey" id="backBtn">Back</button>
-                        <button class="waves-effect waves-light btn grey" id="saveBtn" autocomplete="off">Save</button>
-                        <button class="waves-effect waves-light btn grey" id="updateBtn">Update</button>
-                        <p>
-                            <button class="waves-effect waves-light btn grey" id="deleteBtn">Delete</button>
-                        </p>
-                </div>
-
+                   <!--  <div class="center-align">
+                        <ul>
+                            <li><button class="waves-effect waves-light btn blue" id="backBtnTop"  text-align="left">Back</button></li>
+                            <li><button class="waves-effect waves-light btn blue" id="saveBtnTop"  text-align="left">Save</button></li>
+                            <li><button class="waves-effect waves-light btn blue" id="updateBtnTop" text-align="left">Update</button></li>
+                            <li><button class="waves-effect waves-light btn blue" id="deleteBtnTop" text-align="left">Delete</button></li>
+                        </ul>
+                    </div> -->
                     <div class="row">
                         <form class="col s12">
                             <div class="row">
@@ -50,21 +70,18 @@
                             </div>
                         </form>
                     </div>
-                    <!-- <div class="center-align">
-                        <div id="success" class='success' style='display:none'>Success</div>
-                        <div id="topicexistalready" class='topicalreadyexist' style='display:none'>Title Already Exists</div>
-                        <div id="emptyfields" class='emptyfields' style='display:none'>Empty Fields</div>
-                        <button class="waves-effect waves-light btn grey" id="backBtn">Back</button>
-                        <button class="waves-effect waves-light btn grey" id="saveBtn">Save</button>
-                        <button class="waves-effect waves-light btn grey" id="updateBtn">Update</button>
-        				<p>
-                            <button class="waves-effect waves-light btn grey" id="deleteBtn">Delete</button>
-                        </p>
-                    </div> -->
                 </div>    	
             </div>
-        </div>
+        </div>       
+
         <div style="background-color:white" id="footer">
+            <ul>
+                <li><i id="backBtn" class="material-icons">keyboard_backspace</i></li>
+                <li><i id="saveBtn" class="material-icons">save</i></li>
+                <li><i id="updateBtn" class="material-icons">save</i></li>
+                <li><i id="deleteBtn" class="material-icons">delete</i></li>
+            </ul>
+
             <img id="footerimage" src="../images/logo_footer.png" width="165" height="60" draggable="false" align="middle"/>
         </div>
     </body>
