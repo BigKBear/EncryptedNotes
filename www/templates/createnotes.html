@@ -10,36 +10,50 @@
         <link type="text/css" rel="stylesheet" href="../css/material_icons.css">
         <!--Import materialize.css-->
         <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection" />
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(window).load(function() {
+			$(".loader").fadeOut("slow");
+		})
+	</script>
     </head>
 
-    <body>
+    <body body bgcolor="#C0C0C0">
         <div class="navbar-fixed white">
-            <nav class = "white">            
-                <div style="background-color:white" class="nav-wrapper">
-                    <a href="" style="color:black" class="brand-logo-center" >
+		<!--<a href="www.google.com" id="x"><img id="y" src="C:\Users\venkatesh.UNLIMITED\Desktop\page-loader.gif" /></a>-->
+		<!--<div class="loader"></div>-->
+            <nav>            
+                <div class="nav-wrapper">
+                    <a class="brand-logo-center" >
                         <img src="../images/icon.png" width="36" height="36" draggable="false" align="center">
-                            <b>
-                                <font size="4">
-                                    ENCRYPTED NOTES 
-                                </font>                            
-                            </b>
-                        </img>
+							<strong>
+                                    <b>ENCRYPTED NOTES</b>
+                            </strong>
+						</img>
                     </a>
+
                     <div class="nav-left">
-                        <p height="36" style="background-color:white"> <i style="color:black" id="backBtnTop" class="material-icons md-10">chevron_left</i></p>
+                        <button id="menuBackButtonTop">
+                            <i id="backBtnTopBar" class="material-icons">chevron_left</i>
+                        </button>
                     </div>
                     
                     <div class="nav-right">
+                        <button id="menuDropDown" class="accordion">
+                            <i class="material-icons md-30">more_vert</i>
+                        </button>
 
-                      <p height="36" style="background-color:white" id="myDropdown"><i style="color:black" class="material-icons md-30">more_vert</i></p>
-                      <div id="myDropdownMenu" class="dropdown-content">
-                        <ul>
-                            <li><button class="waves-effect waves-light btn blue" id="backBtnTop"  text-align="left">Back</button></li>
-                            <li><button class="waves-effect waves-light btn blue" id="saveBtnTop"  text-align="left">Save</button></li>
-                            <li><button class="waves-effect waves-light btn blue" id="updateBtnTop" text-align="left">Update</button></li>
-                            <li><button class="waves-effect waves-light btn blue" id="deleteBtnTop" text-align="left">Delete</button></li>
-                        </ul>
-                      </div>
+                        <div class="panel">
+                            <ul>
+                                <!--<li><button style="font-size: 10px;" class="waves-effect waves-light btn grey" id="backBtnTop"  text-align="left">Back</button></li><br />
+                                <li><button style="font-size: 10px;" class="waves-effect waves-light btn grey" id="saveBtnTop"  text-align="left">Save</button></li><br />
+                                <li><button style="font-size: 10px;" class="waves-effect waves-light btn grey" id="updateBtnTop" text-align="left">Update</button></li><br />
+                                <li><button style="font-size: 10pJASONuwi3
+                                <li><button style="font-size: 10px;" class="waves-effect waves-light btn grey" id="deleteBtnTop" text-align="left">Delete</button></li>-->
+								<INPUT Type="button" value="DELETE" id="deleteBtns" text="bolder" style="color:black"></INPUT>
+    							<!--<INPUT Type="button" onClick="history.go(0)" value="Refresh"></INPUT>-->
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -47,39 +61,47 @@
                
         <div class="row">
             <div class="col s12 m12">
-                <div class="card-panel">
-                   <!--  <div class="center-align">
-                        <ul>
-                            <li><button class="waves-effect waves-light btn blue" id="backBtnTop"  text-align="left">Back</button></li>
-                            <li><button class="waves-effect waves-light btn blue" id="saveBtnTop"  text-align="left">Save</button></li>
-                            <li><button class="waves-effect waves-light btn blue" id="updateBtnTop" text-align="left">Update</button></li>
-                            <li><button class="waves-effect waves-light btn blue" id="deleteBtnTop" text-align="left">Delete</button></li>
-                        </ul>
-                    </div> -->
-                    <div class="row">
-                        <form class="col s12">
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <textarea id="topicname" class="materialize-textarea"></textarea>
-                                    <label for="topicname">Title</label>
-                                </div>
-                                <div class="input-field col s12">
-                                    <textarea id="topicdesc" class="scrollabletextbox" style="width:250px;height:150px;"></textarea>
-                                    <label for="topicdesc">Notes</label>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>    	
+                <div class="row" >
+                    <form class="col s12">
+                        <div class="row" bgcolor="#E6E6FA" margin-top="60dp">
+                            <ul>
+                                <li>
+                                    <p>
+                                        <strong><b>TITLE:</b></strong>
+                                    </p>
+                                </li>
+
+                                <li>
+                                    <div class="input-field col s12">
+                                        <textarea placeholder="" id="topicname" class="scrollabletextbox" style="height:80px"></textarea>
+										<!--<textarea placeholder="" id="topicname" class=""></textarea>-->
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <p>
+                                        <b><strong>NOTES:</strong></b>
+                                    </p>
+                                </li>
+
+                                <li>
+                                    <div class="input-field col s12">
+                                        <textarea placeholder="" id="topicdesc" class="scrollabletextbox"></textarea>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>       
 
-        <div style="background-color:white" id="footer">
+        <div id="footer">
             <ul>
-                <li><i id="backBtn" class="material-icons">keyboard_backspace</i></li>
+                <!--<li><i id="backBtn" class="material-icons">keyboard_backspace</i></li>-->
                 <li><i id="saveBtn" class="material-icons">save</i></li>
                 <li><i id="updateBtn" class="material-icons">save</i></li>
-                <li><i id="deleteBtn" class="material-icons">delete</i></li>
+                <!--<li><i id="deleteBtn" class="material-icons">delete</i></li>-->
             </ul>
 
             <img id="footerimage" src="../images/logo_footer.png" width="165" height="60" draggable="false" align="middle"/>
@@ -90,7 +112,7 @@
     <script type="text/javascript" src="../js/controllers/createnotes.js"></script>
 
     <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
-    <script src="../js/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="../js/sweetalert2.min.js"></script>
     <script type="text/javascript" src="../js/materialize.min.js"></script>
     <script type="text/javascript" src="../js/crypto.js"></script>
     <script type="text/javascript" src='../js/phonegap-toast.js'></script>

@@ -1,25 +1,41 @@
 /*
-The JS file for database
+The JS file for createnotes.html
 */
-//function encrypted(){
+
 var SECRET_PHRASE = "venkatencryption";
 var db;
 var i=0;
 var app={
 	//Application constructor
 	initialize:function() {
+		var acc = document.getElementsByClassName("accordion");
+		var i;
+
+		for (i = 0; i < acc.length; i++) {
+		    acc[i].onclick = function(){
+		        this.classList.toggle("active");
+		        var panel = this.nextElementSibling;
+		        if (panel.style.display === "block") {
+		            panel.style.display = "none";
+		        } else {
+		            panel.style.display = "block";
+		        }
+		    }
+		}
+
 		this.bindEvents();
 		$('input[type=text]').each(function(input){
 		input.topicname="";
 		input.topicdesc="";
 		});
 	},
+
 	//Bind Event Listeners
 	//
 	//Bind any events that are required on startup. Common events are:
 	//'load', 'deviceready', 'offline' and 'online'.
 	bindEvents:function(){
-//		document.getElementById("myDropdownMenu").toggle("hide");
+		//document.getElementById("myDropdownMenu").toggle("hide");
 		document.addEventListener('deviceready', this.onDeviceReady, false);
 		document.addEventListener('DOMContentLoaded', this.onDeviceReady);    
 		if ('addEventListener' in document) {
@@ -77,8 +93,28 @@ var app={
 				app.back();
 			});
 		}
+
+		var backBtnTopBar = document.getElementById("backBtnTopBar");
+		if(backBtnTopBar){
+			backBtnTopBar.addEventListener("click", function(){
+				app.back();
+			});
+		}
 		
 		var deletebutton = document.getElementById("deleteBtn");
+		if(deletebutton){
+			deletebutton.addEventListener("click",function(){
+			//ask user are you sure
+			app.askUserBeforeDelete();
+			var delay=1000; //1 second
+
+			setTimeout(function() {
+			  window.location='../index.html';
+			}, delay);
+			});
+		}
+		
+		var deletebutton = document.getElementById("deleteBtns");
 		if(deletebutton){
 			deletebutton.addEventListener("click",function(){
 			//ask user are you sure
@@ -115,6 +151,7 @@ var app={
 
 
 	},
+
 	askUserBeforeDelete:function(){
 		 var deleteUser = window.confirm('Are you sure you want to delete this item?');
 
@@ -124,6 +161,7 @@ var app={
 		    	window.location='../index.html';
 		    }
 	},
+
 	//deviceready Event Handler
 	//Scope of 'this' is the event. In order to call the 'receivedEvent'
 	//function, we must explictly call 'app.receivedEvent(...);
@@ -132,18 +170,21 @@ var app={
 		app.initDB();
 		app.checkForFlow();
 	},
+
 	initDB:function(){
 		db = openDatabase('test', '1.0', 'Test DB', 2 * 1024 * 1024);
 		if(!localStorage.getItem('dbCreated-USERS')){
 		this.createDB();
 		 }
 	},
+
 	checkForFlow : function() {
 		var idx = document.URL;
 		if(idx.indexOf("?msg=view") != -1){
 			$("#updateBtn").show();
 			$("#saveBtn").hide();
 			$("#deleteBtn").show();
+			$("#deleteBtns").show();//test
 
 			$("#updateBtnTop").show();
 			$("#saveBtnTop").hide();
@@ -161,6 +202,7 @@ var app={
 			$("#updateBtn").hide();
 			$("#saveBtn").show();
 			$("#deleteBtn").hide();
+			$("#deleteBtns").hide();//test
 			
 			$("#updateBtnTop").hide();
 			$("#saveBtnTop").show();
@@ -170,7 +212,6 @@ var app={
 	},
 
 	fecthSuccess : function(tx,results){
-		//alert("fecthed");
 		var len = results.rows.length;
 		for (var i = 0; i < len; i++) {
 			if (results.rows.item(i).topic.length > 0) {
@@ -182,6 +223,7 @@ var app={
 			}
 		}
 	},
+
 	fetchError:function(e){
 	  console.log(' error while fetching individual data');
     },
@@ -218,6 +260,7 @@ var app={
 			}
 		}
 	},
+
 	/**
 	 * method to create new password
 	 */
@@ -233,7 +276,7 @@ var app={
             inputPlaceholder: "enter your password"
         }, function(inputValue) {
             if (inputValue === false) {
-                //alert("cancelled");
+                alert("There was an error creating your password please restart the application");
                 return false;
             }
             if (inputValue === "") {
@@ -244,8 +287,8 @@ var app={
             app.checkForPassword();
             swal.close();
         });
-		
 	},
+
 	insertValue:function(){
 		var topicname = document.getElementById("topicname").value.trim();
      	var desc = document.getElementById("topicdesc").value;
@@ -273,6 +316,7 @@ var app={
 			alert("Inserting value error.");
 		}
     },
+
      doesTopicExist:function(topicnametobechecked, desctobeadded){
     	db.transaction(function (tx) {		
     		tx.executeSql('SELECT * from topics WHERE topic=?',[topicnametobechecked],function(tx,results){
@@ -307,6 +351,7 @@ var app={
     		},null);
     	});
     },
+
 	updateValue:function(){
         var topicname = document.getElementById("topicname").value.trim();
 		var desc = document.getElementById("topicdesc").value;
@@ -346,7 +391,8 @@ var app={
 				tx.executeSql('INSERT INTO topics (topic, desc) VALUES (?, ?)', [topicname,desc],app.onInsertSuccess,app.onInsertError);
 			});
 		}
-	},*/	
+	},*/
+
 	deleteValue:function(){
 		var topicname = document.getElementById("topicname").value.trim();
 		var desc = document.getElementById("topicdesc").value;
@@ -359,7 +405,7 @@ var app={
 			db.transaction(function (tx) {
 				//The below line clears the current table in the database with out deleting the table it self
 				//tx.executeSql("DELETE FROM topics",app.onInsertSuccess,app.onInsertError);
-				tx.executeSql("DELETE FROM topics WHERE topic=?",[topicname],onInsertSuccess,onInsertError);
+				tx.executeSql("DELETE FROM topics WHERE topic=?",[topicname],onInsertSuccessdelete,onInsertError);
 			});
 		}else{
 			alert("Error deleting value.");
@@ -367,7 +413,7 @@ var app={
 	},
 
 	/*
-	deleteValue:function(){
+	deleteMultipleValue:function(){
 		var topicname = document.getElementById("topicname").value.trim();
 		var desc = document.getElementById("topicdesc").value;
 		var idx = document.URL;
@@ -388,6 +434,7 @@ var app={
 	back:function(){
 		window.location='../index.html';
 	},
+
 	successCB:function(tx,results){
 	  
 	  var ul = document.getElementById("fetchedValuesList");//get the UI elements from the HTML
@@ -401,33 +448,60 @@ var app={
 			ul.appendChild(li);//add the list to UL
         }
 		$("#fetchedValuesList li").on('click', function(e) {
-			//alert('inside fetchedvalue');
+			//inside fetchedvalue
 			openIndividualEle($(this)[0].innerHTML);
 		});
     },
+
+    // TODO:See if this can be removed
 	openIndividualEle:function(ele)  {
 		//alert('clicked element --------   '+ele);
 	},
+
 	errorCB:function(e){
 	  alert('error creating table');
     }
 };
+
 app.initialize();
 
 function onInsertSuccess(){
-	//alert('success');
-	//$('.success').stop().fadeIn(400).delay(3000).fadeOut(400);
 	swal({
-		title: 'SUCCESS!',
+		title: 'Encrypting notes please wait',
 		showConfirmButton: false,
-	  	type: 'success',
-    	timer: 2000
+		showLoaderOnConfirm: true,
+    	timer: 4000,
+		imageUrl: "../images/page_loader.gif"
 	}).then(
-	  function () {},
 	  // handling the promise rejection
 	  function (dismiss) {
 	    if (dismiss === 'timer') {
-	      console.log('I was closed by the timer');
+	    	  console.log('I was closed by the timer');
+	    }
+	  }
+	);
+}
+
+function onInsertSuccessdelete(){
+	//$('.success').stop().fadeIn(400).delay(3000).fadeOut(400);
+	/*
+	var _img = document.getElementById('id1');
+	var newImg = new Image;
+	newImg.onload = loader(){
+		_img.src = this.src;
+	}
+	newImg.src = 'images/page-loader.gif';*/
+	swal({
+		title: 'Deleting Note please wait',
+		showConfirmButton: false,
+		showLoaderOnConfirm: true,
+    	timer: 4000,
+		imageUrl: "../images/page_loader.gif"
+	}).then(
+	  // handling the promise rejection
+	  function (dismiss) {
+	    if (dismiss === 'timer') {
+	    	  console.log('I was closed by the timer');
 	    }
 	  }
 	);
@@ -439,24 +513,3 @@ function onInsertError(e){
 	window.location='templates/createnotes.html';
 	//$('success').stop().fadeIn(400).delay(3000).fadeOut(400);
 }
-
-/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
-/*function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}*/
