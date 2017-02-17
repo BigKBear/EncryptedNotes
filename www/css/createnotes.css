@@ -1,3 +1,9 @@
+/*
+Name: Css sheat for createnotes.html
+Developers: Venkatesh Sundarrajulu Ravee, Kyle St.Hill
+*/
+
+/*GENERAL CSS*/
 {
     -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
@@ -9,6 +15,7 @@ body, html {
     padding:0;
     margin:0;
 }
+
 .success, .emptyfields, .topicalreadyexist { 
     width:200px;
     height:20px;
@@ -33,6 +40,152 @@ button {
     cursor: pointer;
 }
 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {    
+    display: list-item;
+}
+
+/*NAVIGATION BAR START*/
+.nav-wrapper{
+ position:fixed;
+ left:0;
+ bottom:0;
+ height: 10%;
+ width:100%;
+ background-color:white;
+}
+
+.brand-logo-center{
+    color:black;
+}
+
+/*BOTH left and right side*/
+.nav-left, .nav-right {
+    border-style: none; 
+    text-align:center;
+}
+
+/*LEFT SIDE*/
+.nav-left{
+    float: left;
+}
+
+.nav-left button i{
+    color:black;
+}
+
+/*RIGHT SIDE*/
+.nav-right {
+    float: right;
+}
+
+.nav-right ul
+{
+    list-style:none;
+    position:relative;
+    float:left;
+    margin:0;
+    padding:0;
+}
+
+.nav-right button i, .nav-left button i{
+    color:black;
+}
+
+/*DROPDOWN IN NAV BAR START*/
+button.accordion {
+    outline: none;
+    font-size: 15px;
+}
+
+button.accordion.active, button.accordion:hover {
+    background-color: #ddd;
+}
+
+div.panel {
+    float: right;
+    padding: 0 18px;
+    display: none;
+    background-color: transparent;
+}
+/*DROPDOWN IN NAV BAR END*/
+
+/*NAVIGATION BAR END*/
+
+/*BODY START*/
+.row ul li p{
+    size: 80px;
+    font-weight: bold;
+}
+
+.row div .col{
+    background-color:#C0C0C0;
+}
+
+#topicname, #topicdesc{
+    width:260px;
+    border:3px solid #000000;
+    background-color: #ffffff;
+}
+
+#topicname{
+    height:5px;
+}
+
+#topicdesc{
+    height:150px;
+}
+
+/*BODY END*/
+
+/*FOOTER BUTTONS*/
+#backBtn, #saveBtn, #updateBtn, /*#deleteBtn,*/ #footerimage{
+    position: absolute;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    top:25%;
+}
+
+#backBtn{
+    left: 10%;
+}
+#saveBtn{
+    left: 20%;
+}
+#updateBtn{
+    left: 20%;
+}
+/*#deleteBtn{
+    left: 40%;
+}*/
+
+#menuDropDown, #menuBackButtonTop{
+    background-color:white; 
+    height:54px;
+    border-style: none;
+    text-align:center;
+}
+
+.loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('images/page-loader.gif') 50% 50% no-repeat /*image that you want to show at loading time */rgb(249,249,249);
+}
+
+.material-icons.md-10 {font-size: 30px;}
+
+.material-icons.md-30 {font-size: 30px;}
+
+/*FOOTER*/
 #footer{
  position:fixed;
  left:0;
@@ -40,16 +193,12 @@ button {
  height: 10%;
  width:100%;
  background-color: #ffffff;
- padding-bottom: 10px;
+ padding-bottom: 60px;
  color: #029;
  border: 1px solid black;
 }
 
 #footerimage{
-    position: absolute;
     left: 77%;
-        -webkit-transform: translateX(-50%);
-        transform: translateX(-50%);
     top:5%;
 }
-

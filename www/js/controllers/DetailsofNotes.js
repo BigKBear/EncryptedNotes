@@ -140,7 +140,7 @@ var app = {
 
     },
     insertValue: function() {
-        var topicname = document.getElementById("topicname").value;
+        var topicname = document.getElementById("topicname").value.trim();
         var desc = document.getElementById("topicdesc").value;
         //encrpt here and store in var
         if (topicname.length == 0 && desc.length == 0) {
@@ -157,7 +157,7 @@ var app = {
     },
     updateValue: function() {
         debugger;
-        var topicname = document.getElementById("topicname").value;
+        var topicname = document.getElementById("topicname").value.trim();
         var desc = document.getElementById("topicdesc").value;
         var idx = document.URL;
         var rowid = idx.split("msg=view")[1];
@@ -181,7 +181,7 @@ var app = {
 
     //decrypt function
     insertdecrypt: function() {
-        var topicname = document.getElementById("topicname").value;
+        var topicname = document.getElementById("topicname").value.trim();
         var desc = document.getElementById("topicdesc").value;
         //decrypt here and store in var
         if (topicname.length == 0 && desc.length == 0) {

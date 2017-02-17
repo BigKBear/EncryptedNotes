@@ -30,6 +30,20 @@ var app={
                     //check that the entered value is the same as the saved password
                     if((inputValue === password)&&(rowid)){
                         //Go to the selected note page
+						swal({
+								title: 'Decrypting note please wait',
+								showConfirmButton: false,
+								showLoaderOnConfirm: true,
+								timer: 4000,
+								imageUrl: "../images/page_loader.gif"
+							}).then(
+						// handling the promise rejection
+						function (dismiss) {
+						if (dismiss === 'timer') {
+							console.log('I was closed by the timer');
+						}
+					}
+				);
                         window.location.href = "../templates/createnotes.html?msg=view" + rowid;
                     }else{
                         pwc++;
@@ -110,7 +124,7 @@ var app={
         var password = localStorage.getItem('appPsss21');
         if(password){            
             document.getElementById("userPassword").value = null;
-            document.getElementById("userPassword").placeholder = "Enters Encryption Password to Decrypt ...";
+            document.getElementById("userPassword").placeholder = "Enter Encryption Password to Decrypt";
         }else{
             document.getElementById("userPassword").value = null;
             document.getElementById("userPassword").placeholder = "Please create a password";
@@ -171,8 +185,8 @@ var app={
     checkConfirmPassword: function(inputValue,confirmValue){
         if(inputValue != confirmValue){
             swal({
-                    title: 'Passwords do NOT match!',
-                    text: 'please reenter BOTH values.',
+                    title: 'Sorry your passwords do not match!',
+                    text: 'please check and try again',
                     type: 'error',
                     confirmButtonText: 'OK'
                 }).then(function() {
