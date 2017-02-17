@@ -325,8 +325,8 @@ var app={
     				//Materialize.toast('Topic exist already', 4000);
 					//$('.topicalreadyexist').stop().fadeIn(400).delay(3000).fadeOut(400);
 					swal({
-					  title: 'Topic error!',
-					  text: 'topicalreadyexist.',
+					  title: 'Warning',
+					  text: 'Title Already Exists',
 					  timer: 2000
 					}).then(
 					  function () {},
@@ -355,8 +355,9 @@ var app={
 	updateValue:function(){
         var topicname = document.getElementById("topicname").value.trim();
 		var desc = document.getElementById("topicdesc").value;
-		//var idx = document.URL;
-		//var rowid = idx.split("msg=view")[1];
+		//var rowids = document.getElementById("rowid").value;
+		var idx = document.URL;
+		var rowids = idx.split("msg=view")[1];
 		//alert("It is desc check"+desc);
 		//encrpt here and store in var
 		if(topicname.length == 0 && desc.length == 0){
@@ -368,7 +369,9 @@ var app={
 			 desc = CryptoJS.AES.encrypt(desc,SECRET_PHRASE);	
 	         db.transaction(function (tx) {
 				 //tx.executeSql('Update topics set desc=? WHERE rowid=?', [desc, (parseInt(rowid))+1],onInsertSuccess,onInsertError);
-				 tx.executeSql('Update topics set desc=? WHERE topic=?', [desc, topicname],onInsertSuccess,onInsertError);
+				 //tx.executeSql('Update topics set desc=? WHERE topic=?', [desc, topicname],onInsertSuccess,onInsertError);
+				 tx.executeSql('Update topics set desc=?,topic=? WHERE topic=?', [desc, topicname,rowids],onInsertSuccess,onInsertError);
+				 //tx.executeSql('Update topics set desc=?,topic=? WHERE topic=?', [desc, topicname,topicname],onInsertSuccess,onInsertError);
 				 //desc = CryptoJS.AES.encrypt(desc,SECRET_PHRASE);
 				 //alert('updated after decrypt desc'+desc);
 	        });
